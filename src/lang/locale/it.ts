@@ -9,6 +9,7 @@ const it: IBaseLocale = {
     DUE_CARDS: "Schede da fare",
     NEW_CARDS: "Schede nuove",
     TOTAL_CARDS: "Schede totali",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Indietro",
     SKIP: "Salta",
     EDIT_CARD: "Modifica scheda",

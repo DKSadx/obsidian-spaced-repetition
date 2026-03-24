@@ -9,6 +9,7 @@ const ja: IBaseLocale = {
     DUE_CARDS: "期日のカード",
     NEW_CARDS: "新規のカード",
     TOTAL_CARDS: "カード合計",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Back",
     SKIP: "Skip",
     EDIT_CARD: "Edit Card",

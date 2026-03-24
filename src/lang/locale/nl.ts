@@ -9,6 +9,7 @@ const nl: IBaseLocale = {
     DUE_CARDS: "Te beoordelen kaarten",
     NEW_CARDS: "Nieuwe kaarten",
     TOTAL_CARDS: "Totaal aantal kaarten",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Terug",
     SKIP: "Overslaan",
     EDIT_CARD: "Kaart bewerken",

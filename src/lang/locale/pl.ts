@@ -10,6 +10,7 @@ const pl: IBaseLocale = {
     DUE_CARDS: "Fiszki z terminem",
     NEW_CARDS: "Nowe fiszki",
     TOTAL_CARDS: "Wszystkie karty",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Wstecz",
     SKIP: "Pomiń",
     EDIT_CARD: "Edytuj kartę",

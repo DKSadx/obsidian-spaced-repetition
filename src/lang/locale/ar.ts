@@ -10,6 +10,7 @@ const ar: IBaseLocale = {
     DUE_CARDS: "بطاقات مُستحقة",
     NEW_CARDS: "بطاقات جديدة",
     TOTAL_CARDS: "إجمالي البطاقات",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "رجوع",
     SKIP: "Skip",
     EDIT_CARD: "تعديل البطاقة",

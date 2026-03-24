@@ -11,6 +11,7 @@ const ptBR: IBaseLocale = {
     DUE_CARDS: "Cartas para Colocar em Dia",
     NEW_CARDS: "Novas Cartas",
     TOTAL_CARDS: "Total de Cartas",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Voltar",
     SKIP: "Pular",
     EDIT_CARD: "Editar Cartão",

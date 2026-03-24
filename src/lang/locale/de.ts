@@ -13,6 +13,7 @@ const de: IBaseLocale = {
     DUE_CARDS: "Anstehende Karten",
     NEW_CARDS: "Neue Karten",
     TOTAL_CARDS: "Alle Karten",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Zurück",
     SKIP: "Überspringen",
     EDIT_CARD: "Karte bearbeiten",

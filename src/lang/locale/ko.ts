@@ -10,6 +10,7 @@ const ko: IBaseLocale = {
     DUE_CARDS: "다시 볼 카드들",
     NEW_CARDS: "새로운 카드들",
     TOTAL_CARDS: "전체 카드들",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Back",
     SKIP: "Skip",
     EDIT_CARD: "Edit Card",

@@ -9,6 +9,7 @@ const cz: IBaseLocale = {
     DUE_CARDS: "Kartičky po termínu",
     NEW_CARDS: "Nové kartičky",
     TOTAL_CARDS: "Kartiček celkem",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Back",
     SKIP: "Skip",
     EDIT_CARD: "Edit Card",

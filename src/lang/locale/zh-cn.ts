@@ -9,6 +9,7 @@ const zhCN: IBaseLocale = {
     DUE_CARDS: "到期卡片",
     NEW_CARDS: "新卡片",
     TOTAL_CARDS: "全部卡片",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "返回",
     SKIP: "略过",
     EDIT_CARD: "编辑卡片",

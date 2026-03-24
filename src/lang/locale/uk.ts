@@ -13,6 +13,7 @@ const uk: IBaseLocale = {
     DUE_CARDS: "Картки до повторення",
     NEW_CARDS: "Нові картки",
     TOTAL_CARDS: "Усього карток",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Назад",
     SKIP: "Пропустити",
     EDIT_CARD: "Редагувати картку",

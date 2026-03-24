@@ -21,12 +21,14 @@ export interface IFlashcardReviewSequencer {
     get currentNote(): Note;
     get currentDeck(): Deck;
     get originalDeckTree(): Deck;
+    get remainingDeckTree(): Deck;
 
     setDeckTree(originalDeckTree: Deck, remainingDeckTree: Deck): void;
     setCurrentDeck(topicPath: TopicPath): void;
     getDeckStats(topicPath: TopicPath): DeckStats;
     getSubDecksWithCardsInQueue(deck: Deck): Deck[];
     skipCurrentCard(): void;
+    jumpToCard(card: Card, deckPath: TopicPath): boolean;
     determineCardSchedule(response: ReviewResponse, card: Card): RepItemScheduleInfo;
     processReview(response: ReviewResponse): Promise<void>;
     updateCurrentQuestionText(text: string): Promise<void>;
@@ -100,7 +102,7 @@ export class FlashcardReviewSequencer implements IFlashcardReviewSequencer {
     private _originalDeckTree: Deck;
 
     // This is set by the caller, and must have the same deck hierarchy as originalDeckTree.
-    private remainingDeckTree: Deck;
+    private _remainingDeckTree: Deck;
 
     private reviewMode: FlashcardReviewMode;
     private cardSequencer: IDeckTreeIterator;
@@ -152,8 +154,12 @@ export class FlashcardReviewSequencer implements IFlashcardReviewSequencer {
     setDeckTree(originalDeckTree: Deck, remainingDeckTree: Deck): void {
         this.cardSequencer.setBaseDeck(remainingDeckTree);
         this._originalDeckTree = originalDeckTree;
-        this.remainingDeckTree = remainingDeckTree;
+        this._remainingDeckTree = remainingDeckTree;
         this.setCurrentDeck(TopicPath.emptyPath);
+    }
+
+    get remainingDeckTree(): Deck {
+        return this._remainingDeckTree;
     }
 
     setCurrentDeck(topicPath: TopicPath): void {
@@ -169,7 +175,7 @@ export class FlashcardReviewSequencer implements IFlashcardReviewSequencer {
         const totalCount: number = this._originalDeckTree
             .getDeck(topicPath)
             .getDistinctCardCount(CardListType.All, true);
-        const remainingDeck: Deck = this.remainingDeckTree.getDeck(topicPath);
+        const remainingDeck: Deck = this._remainingDeckTree.getDeck(topicPath);
         const newCount: number = remainingDeck.getDistinctCardCount(CardListType.NewCard, true);
         const dueCount: number = remainingDeck.getDistinctCardCount(CardListType.DueCard, true);
 
@@ -223,6 +229,37 @@ export class FlashcardReviewSequencer implements IFlashcardReviewSequencer {
 
     skipCurrentCard(): void {
         this.cardSequencer.deleteCurrentQuestionFromAllDecks();
+    }
+
+    jumpToCard(card: Card, deckPath: TopicPath): boolean {
+        const foundDeck = this._findDeckContainingCard(card, this._remainingDeckTree);
+        if (!foundDeck) return false;
+
+        const newIdx = foundDeck.newFlashcards.indexOf(card);
+        if (newIdx !== -1) {
+            foundDeck.newFlashcards.splice(newIdx, 1);
+            foundDeck.newFlashcards.unshift(card);
+        } else {
+            const dueIdx = foundDeck.dueFlashcards.indexOf(card);
+            if (dueIdx !== -1) {
+                foundDeck.dueFlashcards.splice(dueIdx, 1);
+                foundDeck.dueFlashcards.unshift(card);
+            }
+        }
+
+        this.setCurrentDeck(deckPath);
+        return true;
+    }
+
+    private _findDeckContainingCard(card: Card, deck: Deck): Deck | null {
+        if (deck.newFlashcards.includes(card) || deck.dueFlashcards.includes(card)) {
+            return deck;
+        }
+        for (const subdeck of deck.subdecks) {
+            const found = this._findDeckContainingCard(card, subdeck);
+            if (found) return found;
+        }
+        return null;
     }
 
     private deleteCurrentCard(): void {

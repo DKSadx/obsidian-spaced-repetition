@@ -1,4 +1,4 @@
-/* ../../../../../private/var/folders/fj/byr2jbx10jj9311777x9hyhm0000gn/T/tmp-5511-XhxbBZ91dccu/obsidian-spaced-repetition/src/ui/styles.css */
+/* ../../../../../private/var/folders/fj/byr2jbx10jj9311777x9hyhm0000gn/T/tmp-6846-5Pgdm8ytiLUu/obsidian-spaced-repetition/src/ui/styles.css */
 .sr-bg-blue,
 .sr-bg-yellow,
 .sr-bg-green,
@@ -35,6 +35,77 @@
 }
 .sr-is-hidden {
   display: none !important;
+}
+.sr-card-browser-container {
+  & .sr-scroll-wrapper {
+    height: 100px;
+    overflow: hidden;
+    flex-grow: 1;
+    display: flex;
+  }
+}
+.sr-card-browser-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.sr-card-browser-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  transition: background 0.1s ease;
+  &.sr-card-browser-item-active {
+    cursor: pointer;
+    &:hover {
+      background: var(--background-modifier-hover);
+    }
+  }
+  &.sr-card-browser-item-done {
+    opacity: 0.45;
+  }
+}
+.sr-card-browser-item-front {
+  flex: 1;
+  font-size: 0.88em;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+.sr-card-browser-item-badge {
+  font-size: 0.72em;
+  font-weight: 600;
+  padding: 0.2em 0.55em;
+  border-radius: var(--radius-s);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 0.1em;
+  color: #fff;
+  &.sr-card-browser-badge-new {
+    background-color: hsl(207, 90%, 54%);
+  }
+  &.sr-card-browser-badge-due {
+    background-color: hsl(122, 39%, 49%);
+  }
+  &.sr-card-browser-badge-done {
+    background: var(--background-modifier-border);
+    color: var(--text-muted);
+  }
+}
+.sr-card-browser-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0;
 }
 .sr-hide-by-scaling {
   scale: 0;

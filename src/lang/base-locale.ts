@@ -5,6 +5,7 @@ export interface IBaseLocale {
     NEW_CARDS: string;
     TOTAL_CARDS: string;
     BACK: string;
+    BROWSE_CARDS: string;
     SKIP: string;
     EDIT_CARD: string;
     RESET_CARD_PROGRESS: string;

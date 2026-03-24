@@ -9,6 +9,7 @@ const en: IBaseLocale = {
     NEW_CARDS: "New Cards",
     TOTAL_CARDS: "Total Cards",
     BACK: "Back",
+    BROWSE_CARDS: "Browse Cards",
     SKIP: "Skip",
     EDIT_CARD: "Edit Card",
     RESET_CARD_PROGRESS: "Reset card's progress",

@@ -9,6 +9,7 @@ const zhTW: IBaseLocale = {
     DUE_CARDS: "到期卡片",
     NEW_CARDS: "新卡片",
     TOTAL_CARDS: "全部卡片",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "返回",
     SKIP: "略過",
     EDIT_CARD: "編輯卡片",

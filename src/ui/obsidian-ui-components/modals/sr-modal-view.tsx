@@ -4,10 +4,12 @@ import {
     FlashcardReviewMode,
     IFlashcardReviewSequencer as IFlashcardReviewSequencer,
 } from "src/card/flashcard-review-sequencer";
+import { Card } from "src/card/card";
 import { Question } from "src/card/questions/question";
 import { Deck } from "src/deck/deck";
 import type SRPlugin from "src/main";
 import { SRSettings } from "src/settings";
+import { CardBrowserContainer } from "src/ui/obsidian-ui-components/content-container/card-browser-container";
 import { CardContainer } from "src/ui/obsidian-ui-components/content-container/card-container/card-container";
 import { DeckContainer } from "src/ui/obsidian-ui-components/content-container/deck-container";
 import { FlashcardEditModal } from "src/ui/obsidian-ui-components/modals/edit-modal";
@@ -29,6 +31,7 @@ export class SRModalView extends Modal {
     private reviewMode: FlashcardReviewMode;
     private deckContainer: DeckContainer;
     private cardContainer: CardContainer;
+    private cardBrowserContainer: CardBrowserContainer;
 
     constructor(
         app: App,
@@ -76,6 +79,15 @@ export class SRModalView extends Modal {
             this.reviewSequencer,
             this.contentEl.createDiv(),
             this._startReviewOfDeck.bind(this),
+            this._showCardBrowser.bind(this),
+            this.close.bind(this),
+        );
+
+        this.cardBrowserContainer = new CardBrowserContainer(
+            this.contentEl.createDiv(),
+            this.reviewSequencer,
+            this._startReviewFromCard.bind(this),
+            this._showDecksList.bind(this),
             this.close.bind(this),
         );
 
@@ -139,10 +151,12 @@ export class SRModalView extends Modal {
         this.mode = FlashcardMode.Closed;
         this.deckContainer.close();
         this.cardContainer.close();
+        this.cardBrowserContainer.close();
     }
 
     private _showDecksList(): void {
         this._hideFlashcard();
+        this._hideCardBrowser();
         this.deckContainer.show();
     }
 
@@ -152,11 +166,22 @@ export class SRModalView extends Modal {
 
     private _showFlashcard(deck: Deck): void {
         this._hideDecksList();
+        this._hideCardBrowser();
         this.cardContainer.show(deck);
     }
 
     private _hideFlashcard(): void {
         this.cardContainer.hide();
+    }
+
+    private _showCardBrowser(deck: Deck): void {
+        this._hideDecksList();
+        this._hideFlashcard();
+        this.cardBrowserContainer.show(deck);
+    }
+
+    private _hideCardBrowser(): void {
+        this.cardBrowserContainer.hide();
     }
 
     private _startReviewOfDeck(deck: Deck) {
@@ -165,6 +190,13 @@ export class SRModalView extends Modal {
             this._showFlashcard(deck);
         } else {
             this._showDecksList();
+        }
+    }
+
+    private _startReviewFromCard(card: Card, deck: Deck): void {
+        const jumped = this.reviewSequencer.jumpToCard(card, deck.getTopicPath());
+        if (jumped && this.reviewSequencer.hasCurrentCard) {
+            this._showFlashcard(deck);
         }
     }
 

@@ -10,6 +10,7 @@ const tr: IBaseLocale = {
     DUE_CARDS: "Güncel Kartlar",
     NEW_CARDS: "Yeni Kartlar",
     TOTAL_CARDS: "Toplam Kartlar",
+    BROWSE_CARDS: "Browse Cards",
     BACK: "Geri",
     SKIP: "Atla",
     EDIT_CARD: "Kartı Düzenle",

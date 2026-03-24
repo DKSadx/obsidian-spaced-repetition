@@ -1,4 +1,4 @@
-import { ButtonComponent, Platform } from "obsidian";
+import { ButtonComponent, Menu, Platform } from "obsidian";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import h from "vhtml";
 
@@ -38,6 +38,7 @@ export class DeckContainer {
     private reviewSequencer: IFlashcardReviewSequencer;
     private settings: SRSettings;
     private startReviewOfDeck: (deck: Deck) => void;
+    private browseCards: (deck: Deck) => void;
     private closeModal: () => void | undefined;
 
     constructor(
@@ -46,6 +47,7 @@ export class DeckContainer {
         reviewSequencer: IFlashcardReviewSequencer,
         containerEl: HTMLDivElement,
         startReviewOfDeck: (deck: Deck) => void,
+        browseCards: (deck: Deck) => void,
         closeModal?: () => void,
     ) {
         // Init properties
@@ -54,6 +56,7 @@ export class DeckContainer {
         this.reviewSequencer = reviewSequencer;
         this.containerEl = containerEl;
         this.startReviewOfDeck = startReviewOfDeck;
+        this.browseCards = browseCards;
         this.closeModal = closeModal;
 
         // Build ui
@@ -233,6 +236,18 @@ export class DeckContainer {
         // https://github.com/st3v3nmw/obsidian-spaced-repetition/issues/709
         deckTreeSelf.addEventListener("click", () => {
             this.startReviewOfDeck(deck);
+        });
+
+        deckTreeSelf.addEventListener("contextmenu", (e: MouseEvent) => {
+            e.preventDefault();
+            const menu = new Menu();
+            menu.addItem((item) =>
+                item
+                    .setTitle(t("BROWSE_CARDS"))
+                    .setIcon("list")
+                    .onClick(() => this.browseCards(deck)),
+            );
+            menu.showAtMouseEvent(e);
         });
 
         for (const subdeck of deck.subdecks) {
