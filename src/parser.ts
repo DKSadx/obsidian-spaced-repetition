@@ -115,13 +115,13 @@ export function parse(text: string, options: ParserOptions): ParsedQuestionInfo[
         const hasMultilineCardEndMarker =
             options.multilineCardEndMarker && currentTrimmed === options.multilineCardEndMarker;
         if (
-            // We've probably reached the end of a card
-            (isEmptyLine && !options.multilineCardEndMarker) ||
-            // Empty line & we're not picking up any card
-            (isEmptyLine && cardType === null) ||
             // We've reached the end of a multi line card &
             //  we're using custom end markers
-            hasMultilineCardEndMarker
+            hasMultilineCardEndMarker ||
+            // Empty line ends a card when no custom end marker and we're past the separator
+            (isEmptyLine && cardType !== null && !options.multilineCardEndMarker) ||
+            // Empty line resets state when nothing has been accumulated yet (between cards)
+            (isEmptyLine && cardText.length === 0)
         ) {
             if (cardType) {
                 // Create a new card

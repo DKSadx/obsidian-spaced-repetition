@@ -435,6 +435,19 @@
         margin: 1rem 0;
     }
 
+    & .sr-content .task-list-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.9em;
+        padding: 0.3em 0;
+        line-height: 1.4;
+    }
+
+    & .sr-content .task-list-item-checkbox {
+        margin-inline-end: 0.5em;
+        flex-shrink: 0;
+    }
+
     & .sr-content .cloze-input {
         height: 1.4rem;
     }
