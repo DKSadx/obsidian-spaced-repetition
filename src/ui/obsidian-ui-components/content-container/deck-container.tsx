@@ -122,9 +122,19 @@ export class DeckContainer {
         // Redraw in case the stats have changed
         this._createHeaderStats();
 
+        const flashcardTagNames = this.settings.flashcardTags.map((tag) =>
+            tag.replace(/^#/, ""),
+        );
+
         this.content.empty();
         for (const deck of this.reviewSequencer.originalDeckTree.subdecks) {
-            this._createTree(deck, this.content);
+            if (flashcardTagNames.includes(deck.deckName)) {
+                for (const subdeck of deck.subdecks) {
+                    this._createTree(subdeck, this.content);
+                }
+            } else {
+                this._createTree(deck, this.content);
+            }
         }
 
         if (this.containerEl.hasClass("sr-is-hidden")) {
@@ -231,16 +241,35 @@ export class DeckContainer {
             });
         }
 
-        // Add the click handler to deckTreeSelf instead of deckTreeInner so that it activates
-        // over the entire rectangle of the tree item, not just the text of the topic name
-        // https://github.com/st3v3nmw/obsidian-spaced-repetition/issues/709
-        deckTreeSelf.addEventListener("click", () => {
-            this.startReviewOfDeck(deck);
-        });
+        if (deck.subdecks.length > 0) {
+            // Non-leaf: left click toggles collapse/expand
+            deckTreeSelf.addEventListener("click", (e) => {
+                if (collapsed) {
+                    (collapseIconEl.childNodes[0] as HTMLElement).style.transform = "";
+                    deckTreeChildren.style.display = "block";
+                } else {
+                    (collapseIconEl.childNodes[0] as HTMLElement).style.transform =
+                        "rotate(-90deg)";
+                    deckTreeChildren.style.display = "none";
+                }
+                collapsed = !collapsed;
+            });
+        } else {
+            // Leaf: left click starts review
+            deckTreeSelf.addEventListener("click", () => {
+                this.startReviewOfDeck(deck);
+            });
+        }
 
         deckTreeSelf.addEventListener("contextmenu", (e: MouseEvent) => {
             e.preventDefault();
             const menu = new Menu();
+            menu.addItem((item) =>
+                item
+                    .setTitle(t("REVIEW_CARDS"))
+                    .setIcon("play")
+                    .onClick(() => this.startReviewOfDeck(deck)),
+            );
             menu.addItem((item) =>
                 item
                     .setTitle(t("BROWSE_CARDS"))
