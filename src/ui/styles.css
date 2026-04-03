@@ -524,13 +524,63 @@
         display: flex;
         align-items: center;
         font-size: 0.9em;
-        padding: 0.3em 0;
+        padding: 0.3em 0.4em;
         line-height: 1.4;
+        border-radius: var(--radius-s);
+        transition: background 0.15s;
+        border-left: 3px solid transparent;
     }
 
     & .sr-content .task-list-item-checkbox {
+        position: static;
+        top: auto;
+        left: auto;
+        margin-inline-start: 0;
         margin-inline-end: 0.5em;
         flex-shrink: 0;
+    }
+
+    & .sr-content .task-list-item.sr-quiz-correct {
+        background: rgba(34, 197, 94, 0.12);
+        border-left-color: hsl(122, 39%, 49%);
+
+        &::after {
+            content: "✓";
+            color: hsl(122, 39%, 49%);
+            font-weight: 700;
+            margin-left: auto;
+            padding-left: 0.5em;
+        }
+    }
+
+    & .sr-content .task-list-item.sr-quiz-incorrect {
+        background: rgba(239, 68, 68, 0.12);
+        border-left-color: hsl(0, 84%, 60%);
+
+        &::after {
+            content: "✗";
+            color: hsl(0, 84%, 60%);
+            font-weight: 700;
+            margin-left: auto;
+            padding-left: 0.5em;
+        }
+    }
+
+    & .sr-content .task-list-item.sr-quiz-missed {
+        background: rgba(249, 115, 22, 0.12);
+        border-left-color: hsl(25, 95%, 53%);
+
+        &::after {
+            content: "→";
+            color: hsl(25, 95%, 53%);
+            font-weight: 700;
+            margin-left: auto;
+            padding-left: 0.5em;
+        }
+    }
+
+    & .sr-content .task-list-item.sr-quiz-neutral {
+        opacity: 0.45;
     }
 
     & .sr-content .cloze-input {

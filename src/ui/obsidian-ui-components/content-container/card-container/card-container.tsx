@@ -51,6 +51,8 @@ export class CardContainer {
 
     private clozeInputs: NodeListOf<Element>;
     private clozeAnswers: NodeListOf<Element>;
+    private quizSelections: boolean[] = [];
+    private hasQuizCheckboxes: boolean = false;
 
     private reviewSequencer: IFlashcardReviewSequencer;
     private settings: SRSettings;
@@ -233,6 +235,9 @@ export class CardContainer {
 
         // Setup cloze input listeners
         this._setupClozeInputListeners();
+
+        // Setup interactive quiz checkboxes (if card has task-list options)
+        this._setupQuizCheckboxes();
     }
 
     private get _currentCard(): Card {
@@ -334,6 +339,64 @@ export class CardContainer {
         );
     }
 
+    private _setupQuizCheckboxes(): void {
+        this.quizSelections = [];
+        this.hasQuizCheckboxes = false;
+
+        const checkboxes = this.content.querySelectorAll<HTMLInputElement>(
+            ".task-list-item-checkbox",
+        );
+        if (checkboxes.length === 0) return;
+
+        this.hasQuizCheckboxes = true;
+        checkboxes.forEach((checkbox, index) => {
+            this.quizSelections[index] = false;
+            checkbox.removeAttribute("disabled");
+            checkbox.style.cursor = "pointer";
+
+            // Stop Obsidian's file-modification handler from firing
+            checkbox.addEventListener("click", (e) => e.stopPropagation());
+            checkbox.addEventListener("change", () => {
+                this.quizSelections[index] = checkbox.checked;
+            });
+        });
+    }
+
+    private _evaluateQuizAnswers(): void {
+        const frontCount = this.quizSelections.length;
+        if (frontCount === 0) return;
+
+        const allItems = this.content.querySelectorAll<HTMLElement>(".task-list-item");
+        if (allItems.length <= frontCount) return;
+
+        // Lock front checkboxes
+        for (let i = 0; i < frontCount; i++) {
+            const cb = allItems[i].querySelector<HTMLInputElement>(".task-list-item-checkbox");
+            if (cb) cb.disabled = true;
+        }
+
+        // Color-code back items
+        for (let i = frontCount; i < allItems.length; i++) {
+            const item = allItems[i];
+            const cb = item.querySelector<HTMLInputElement>(".task-list-item-checkbox");
+            if (!cb) continue;
+            cb.disabled = true;
+
+            const isCorrect = cb.checked || item.getAttribute("data-task") === "x";
+            const userSelected = this.quizSelections[i - frontCount] ?? false;
+
+            if (isCorrect && userSelected) {
+                item.addClass("sr-quiz-correct");
+            } else if (!isCorrect && userSelected) {
+                item.addClass("sr-quiz-incorrect");
+            } else if (isCorrect && !userSelected) {
+                item.addClass("sr-quiz-missed");
+            } else {
+                item.addClass("sr-quiz-neutral");
+            }
+        }
+    }
+
     private _setupClozeInputListeners(): void {
         this.clozeInputs = document.querySelectorAll(".cloze-input");
 
@@ -365,7 +428,7 @@ export class CardContainer {
 
     // #region -> Response
 
-    private _showAnswer(): void {
+    private async _showAnswer(): Promise<void> {
         const timeNow = now();
         if (
             this.lastPressed &&
@@ -392,7 +455,7 @@ export class CardContainer {
             this.plugin,
             this._currentNote.filePath,
         );
-        wrapper.renderMarkdownWrapper(
+        await wrapper.renderMarkdownWrapper(
             this._currentCard.back,
             this.content,
             this._currentQuestion.questionText.textDirection,
@@ -400,6 +463,11 @@ export class CardContainer {
 
         // Evaluate cloze answers
         this._evaluateClozeAnswers();
+
+        // Evaluate quiz checkbox answers
+        if (this.hasQuizCheckboxes) {
+            this._evaluateQuizAnswers();
+        }
 
         // Show response buttons
         this.response.showRatingButtons(
